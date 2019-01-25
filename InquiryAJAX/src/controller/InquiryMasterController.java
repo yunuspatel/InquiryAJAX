@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -64,11 +65,74 @@ public class InquiryMasterController extends HttpServlet {
 			{
 				response.getWriter().println("Empty");
 			}else {
-				response.getWriter().println("NotEmpty");
+				response.getWriter().println("Not");
 			}
 		}else if(flag.equals("addInquiry")) {
 			addInquiry(request,response);
+		}else if(flag.equals("display")) {
+			setInquiryData(request,response);
+		}else if(flag.equals("loadData")) {
+			loadData(request,response);
+		}else if(flag.equals("delete")) {
+			deleteInquiry(request,response);
 		}
+	}
+
+	private void deleteInquiry(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		InquiryMasterDao inquiryMasterDao=new InquiryMasterDao();
+		int id=Integer.parseInt(request.getParameter("id"));
+		InquiryVo inquiryVo=new InquiryVo();
+		inquiryVo.setInquiryId(id);
+		inquiryMasterDao.delete(inquiryVo);
+	}
+
+	private void loadData(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// TODO Auto-generated method stub
+		InquiryMasterDao inquiryMasterDao=new InquiryMasterDao();
+		int id=Integer.parseInt(request.getParameter("id"));
+		List<InquiryVo> list=inquiryMasterDao.getInquiry(id);
+		
+		if(!list.isEmpty()) {
+			PrintWriter out=response.getWriter();
+			
+			String data="<table align=center border=1>";
+			for(InquiryVo inquiryVo : list) {
+				data+="<tr>";
+				data+="<td>"+inquiryVo.getInquiryId()+"</td>";
+				data+="<td>"+inquiryVo.getCustomerName()+"</td>";
+				data+="<td>"+inquiryVo.getCustomerAddress()+"</td>";
+				data+="<td>"+inquiryVo.getCustomerMobile()+"</td>";
+				data+="<td>"+inquiryVo.getReferenceNumber()+"</td>";
+				data+="<td>"+inquiryVo.getInquiryDetails()+"</td>";
+				data+="<td>"+inquiryVo.getInquiryDate()+"</td>";
+				data+="<td>"+inquiryVo.getSourceVo().getSourceName()+"</td>";
+				data+="</tr>";
+			}
+			data+="</table>";
+			System.out.println(data);
+			out.println(data);
+			/*out.println("<inquiry>");
+			for(InquiryVo inquiryVo : list) {
+				out.println("<inquiryId>"+inquiryVo.getInquiryId()+"</inquiryId");
+				out.println("<address>"+inquiryVo.getCustomerAddress()+"</address");
+				out.println("<name>"+inquiryVo.getCustomerName()+"</name");
+				out.println("<inquiryDetails>"+inquiryVo.getInquiryDetails()+"</inquiryDetails");
+				out.println("<referenceNo>"+inquiryVo.getReferenceNumber()+"</referenceNo");
+				out.println("<mobileno>"+inquiryVo.getCustomerMobile()+"</mobileno");
+				out.println("<inquiryDate>"+inquiryVo.getInquiryDate()+"</inquiryDate");
+				out.println("<referenceName>"+inquiryVo.getSourceVo().getSourceName()+"</referenceName");
+			}
+			out.println("</inquiry>");*/
+		}
+	}
+
+	private void setInquiryData(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		HttpSession session=request.getSession();
+		InquiryMasterDao inquiryMasterDao=new InquiryMasterDao();
+		List<InquiryVo> inquiryList=inquiryMasterDao.getAllInquiries();
+		session.setAttribute("allInquiries", inquiryList);
 	}
 
 	private void addInquiry(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -97,6 +161,10 @@ public class InquiryMasterController extends HttpServlet {
 		int ids=referenceNo.intValue();
 		String referenceNum="INQ"+ids;
 		inquiryVo.setReferenceNumber(referenceNum);
+		
+		List<InquiryVo> inquiryList=inquiryMasterDao.getAllInquiries();
+		HttpSession session=request.getSession();
+		session.setAttribute("allInquiries",inquiryList);
 		
 		inquiryMasterDao.addInquiry(inquiryVo);
 		response.getWriter().println("Inserted");

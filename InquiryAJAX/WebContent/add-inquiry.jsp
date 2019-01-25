@@ -24,6 +24,8 @@
 				if(val.includes("Empty"))
 				{
 					document.getElementById("disLink").hidden = true;
+				}else{
+					document.getElementById("disLink").hidden = false;
 				}
 			}
 		}
@@ -87,7 +89,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <body onload="checkData()">
 <div id="displayLink">
-	<a id="disLink" href="display-inquiries,jsp">Click Here to Display All Inquiries</a>
+	<a id="disLink" href="<%= request.getContextPath() %>/display-inquiries.jsp">Click Here to Display All Inquiries</a>
 </div>
 <div id="nodes">
 <table align=center>

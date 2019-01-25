@@ -52,4 +52,21 @@ public class InquiryMasterDao {
 		List list=session.createSQLQuery(query).list();
 		return (BigInteger) list.get(0);
 	}
+	
+	public List<InquiryVo> getInquiry(int id)
+	{
+		getConnection();
+		transaction=session.beginTransaction();
+		list=session.createQuery("from InquiryVo where inquiryId="+id).list();
+		return list;
+	}
+	
+	public void delete(InquiryVo inquiryVo)
+	{
+		getConnection();
+		transaction=session.beginTransaction();
+		session.delete(inquiryVo);
+		transaction.commit();
+		session.close();
+	}
 }
