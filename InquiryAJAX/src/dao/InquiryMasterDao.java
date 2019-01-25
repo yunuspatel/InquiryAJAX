@@ -1,5 +1,7 @@
 package dao;
 
+import java.math.BigInteger;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.transaction.Transaction;
@@ -41,5 +43,13 @@ public class InquiryMasterDao {
 		transaction=session.beginTransaction();
 		list=session.createQuery("from InquiryVo").list();
 		return list;
+	}
+	
+	public BigInteger getRefernceNo(String query)
+	{
+		getConnection();
+		transaction=session.beginTransaction();
+		List list=session.createSQLQuery(query).list();
+		return (BigInteger) list.get(0);
 	}
 }

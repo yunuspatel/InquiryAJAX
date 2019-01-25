@@ -1,5 +1,7 @@
 package vo;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,8 +33,30 @@ public class InquiryVo {
 	@JoinColumn(name="source_id",referencedColumnName="source_id")
 	SourceVo sourceVo;
 	
+	@Column(name="inquiry_date",length=50)
+	Date inquiryDate;
+	
+	public Date getInquiryDate() {
+		return inquiryDate;
+	}
+
+	public void setInquiryDate(Date inquiryDate) {
+		this.inquiryDate = inquiryDate;
+	}
+
 	@Column(name="inquiry_details",length=250)
 	String inquiryDetails;
+	
+	@Column(name="reference_no",length=25)
+	String referenceNumber;
+	
+	public String getReferenceNumber() {
+		return referenceNumber;
+	}
+
+	public void setReferenceNumber(String referenceNumber) {
+		this.referenceNumber = referenceNumber;
+	}
 
 	public int getInquiryId() {
 		return inquiryId;
